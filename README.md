@@ -1,6 +1,14 @@
 # 病院ダッシュボード
 
+[![GitHub](https://img.shields.io/badge/GitHub-React--PlotlyJs-blue?logo=github)](https://github.com/hiro1966/React-PlotlyJs)
+[![React](https://img.shields.io/badge/React-19.1.1-61DAFB?logo=react)](https://react.dev/)
+[![Plotly](https://img.shields.io/badge/Plotly.js-3.2.0-3F4F75?logo=plotly)](https://plotly.com/javascript/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 React + Plotly.js で作成された病院の入院・外来患者データを可視化するダッシュボードアプリケーションです。
+
+## 🔗 GitHub リポジトリ
+**https://github.com/hiro1966/React-PlotlyJs**
 
 ## 機能
 
@@ -54,20 +62,24 @@ React + Plotly.js で作成された病院の入院・外来患者データを�
 
 ### インストール
 
-1. プロジェクトディレクトリに移動
+1. **リポジトリのクローン**
 ```bash
-cd hospital-dashboard
+git clone https://github.com/hiro1966/React-PlotlyJs.git
+cd React-PlotlyJs
 ```
 
-2. 依存関係のインストール（既に完了）
+2. **依存関係のインストール**
 ```bash
 npm install
 ```
 
-3. データベースの初期化
+3. **データベースの初期化**
 ```bash
 node server/initDatabase.js
 ```
+
+> 📝 **注意**: テストデータベース（`database/hospital.db`）はリポジトリに含まれていますが、
+> データを再生成したい場合は上記コマンドを実行してください。
 
 ## 起動方法
 
