@@ -24,34 +24,38 @@ app.get('/api/inpatients/daily-by-year', (req, res) => {
   try {
     const { startDate, endDate, department } = req.query;
     
+    if (!startDate || !endDate) {
+      return res.status(400).json({ error: '開始日と終了日を指定してください' });
+    }
+    
+    // 前年度の同じ期間を計算
+    const startYear = parseInt(startDate.substring(0, 4));
+    const prevYearStart = `${startYear - 1}${startDate.substring(4)}`;
+    const prevYearEnd = `${startYear - 1}${endDate.substring(4)}`;
+    
+    // 指定期間と前年度の期間のデータを取得
     let query = `
       SELECT 
         admission_date as date,
         strftime('%Y', admission_date) as year,
+        strftime('%m-%d', admission_date) as monthDay,
         department,
         COUNT(*) as count
       FROM inpatients
-      WHERE 1=1
+      WHERE (
+        (admission_date >= ? AND admission_date <= ?)
+        OR (admission_date >= ? AND admission_date <= ?)
+      )
     `;
     
-    const params = [];
-    
-    if (startDate) {
-      query += ` AND admission_date >= ?`;
-      params.push(startDate);
-    }
-    
-    if (endDate) {
-      query += ` AND admission_date <= ?`;
-      params.push(endDate);
-    }
+    const params = [startDate, endDate, prevYearStart, prevYearEnd];
     
     if (department) {
       query += ` AND department = ?`;
       params.push(department);
     }
     
-    query += ` GROUP BY admission_date, year, department ORDER BY admission_date`;
+    query += ` GROUP BY admission_date, year, monthDay, department ORDER BY year, admission_date`;
     
     const stmt = db.prepare(query);
     const results = stmt.all(...params);
@@ -106,34 +110,38 @@ app.get('/api/inpatients/monthly-by-year', (req, res) => {
   try {
     const { startDate, endDate, department } = req.query;
     
+    if (!startDate || !endDate) {
+      return res.status(400).json({ error: '開始日と終了日を指定してください' });
+    }
+    
+    // 前年度の同じ期間を計算
+    const startYear = parseInt(startDate.substring(0, 4));
+    const prevYearStart = `${startYear - 1}${startDate.substring(4)}`;
+    const prevYearEnd = `${startYear - 1}${endDate.substring(4)}`;
+    
+    // 指定期間と前年度の期間のデータを取得
     let query = `
       SELECT 
         strftime('%Y-%m', admission_date) as month,
         strftime('%Y', admission_date) as year,
+        strftime('%m', admission_date) as monthOnly,
         department,
         COUNT(*) as count
       FROM inpatients
-      WHERE 1=1
+      WHERE (
+        (admission_date >= ? AND admission_date <= ?)
+        OR (admission_date >= ? AND admission_date <= ?)
+      )
     `;
     
-    const params = [];
-    
-    if (startDate) {
-      query += ` AND admission_date >= ?`;
-      params.push(startDate);
-    }
-    
-    if (endDate) {
-      query += ` AND admission_date <= ?`;
-      params.push(endDate);
-    }
+    const params = [startDate, endDate, prevYearStart, prevYearEnd];
     
     if (department) {
       query += ` AND department = ?`;
       params.push(department);
     }
     
-    query += ` GROUP BY month, year, department ORDER BY month`;
+    query += ` GROUP BY month, year, monthOnly, department ORDER BY year, month`;
     
     const stmt = db.prepare(query);
     const results = stmt.all(...params);
@@ -188,34 +196,38 @@ app.get('/api/outpatients/daily-by-year', (req, res) => {
   try {
     const { startDate, endDate, department } = req.query;
     
+    if (!startDate || !endDate) {
+      return res.status(400).json({ error: '開始日と終了日を指定してください' });
+    }
+    
+    // 前年度の同じ期間を計算
+    const startYear = parseInt(startDate.substring(0, 4));
+    const prevYearStart = `${startYear - 1}${startDate.substring(4)}`;
+    const prevYearEnd = `${startYear - 1}${endDate.substring(4)}`;
+    
+    // 指定期間と前年度の期間のデータを取得
     let query = `
       SELECT 
         appointment_date as date,
         strftime('%Y', appointment_date) as year,
+        strftime('%m-%d', appointment_date) as monthDay,
         department,
         COUNT(*) as count
       FROM outpatients
-      WHERE 1=1
+      WHERE (
+        (appointment_date >= ? AND appointment_date <= ?)
+        OR (appointment_date >= ? AND appointment_date <= ?)
+      )
     `;
     
-    const params = [];
-    
-    if (startDate) {
-      query += ` AND appointment_date >= ?`;
-      params.push(startDate);
-    }
-    
-    if (endDate) {
-      query += ` AND appointment_date <= ?`;
-      params.push(endDate);
-    }
+    const params = [startDate, endDate, prevYearStart, prevYearEnd];
     
     if (department) {
       query += ` AND department = ?`;
       params.push(department);
     }
     
-    query += ` GROUP BY appointment_date, year, department ORDER BY appointment_date`;
+    query += ` GROUP BY appointment_date, year, monthDay, department ORDER BY year, appointment_date`;
     
     const stmt = db.prepare(query);
     const results = stmt.all(...params);
@@ -314,34 +326,38 @@ app.get('/api/outpatients/monthly-by-year', (req, res) => {
   try {
     const { startDate, endDate, department } = req.query;
     
+    if (!startDate || !endDate) {
+      return res.status(400).json({ error: '開始日と終了日を指定してください' });
+    }
+    
+    // 前年度の同じ期間を計算
+    const startYear = parseInt(startDate.substring(0, 4));
+    const prevYearStart = `${startYear - 1}${startDate.substring(4)}`;
+    const prevYearEnd = `${startYear - 1}${endDate.substring(4)}`;
+    
+    // 指定期間と前年度の期間のデータを取得
     let query = `
       SELECT 
         strftime('%Y-%m', appointment_date) as month,
         strftime('%Y', appointment_date) as year,
+        strftime('%m', appointment_date) as monthOnly,
         department,
         COUNT(*) as count
       FROM outpatients
-      WHERE 1=1
+      WHERE (
+        (appointment_date >= ? AND appointment_date <= ?)
+        OR (appointment_date >= ? AND appointment_date <= ?)
+      )
     `;
     
-    const params = [];
-    
-    if (startDate) {
-      query += ` AND appointment_date >= ?`;
-      params.push(startDate);
-    }
-    
-    if (endDate) {
-      query += ` AND appointment_date <= ?`;
-      params.push(endDate);
-    }
+    const params = [startDate, endDate, prevYearStart, prevYearEnd];
     
     if (department) {
       query += ` AND department = ?`;
       params.push(department);
     }
     
-    query += ` GROUP BY month, year, department ORDER BY month`;
+    query += ` GROUP BY month, year, monthOnly, department ORDER BY year, month`;
     
     const stmt = db.prepare(query);
     const results = stmt.all(...params);

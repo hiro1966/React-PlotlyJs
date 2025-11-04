@@ -64,27 +64,22 @@ function ChartContainer({ type, subType, title, department, dateRange }) {
 
       data.forEach(item => {
         const year = item.year;
-        const dateStr = item.date || item.month;
         
-        // 日付から月/日を抽出
+        // APIから返されるmonthDayまたはmonthOnlyフィールドを使用
         let xValue;
         if (subType.includes('daily')) {
-          // 日毎の場合: MM-DD形式に変換
-          const date = new Date(dateStr);
-          const month = (date.getMonth() + 1).toString().padStart(2, '0');
-          const day = date.getDate().toString().padStart(2, '0');
-          xValue = `${month}-${day}`;
+          // 日毎の場合: monthDayフィールド（MM-DD形式）
+          xValue = item.monthDay;
         } else {
-          // 月毎の場合: YYYY-MM から MM に変換
-          const parts = dateStr.split('-');
-          xValue = parts[1]; // 月のみ（01-12）
+          // 月毎の場合: monthOnlyフィールド（MM形式）
+          xValue = item.monthOnly;
         }
 
         if (!yearGroups[year]) {
           yearGroups[year] = { values: {} };
         }
 
-        // 同じ月/日のデータを集計（複数年度の場合）
+        // 同じ月/日のデータを集計
         if (!yearGroups[year].values[xValue]) {
           yearGroups[year].values[xValue] = 0;
         }
