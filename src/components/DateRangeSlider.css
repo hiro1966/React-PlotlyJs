@@ -1,0 +1,72 @@
+.date-range-slider {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.date-inputs {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.date-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date-input-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.date-input-group input[type="date"] {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+.date-input-group input[type="date"]:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.date-presets {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.preset-btn {
+  padding: 0.5rem 1rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.preset-btn:hover {
+  background-color: #2980b9;
+}
+
+.preset-btn:active {
+  background-color: #1c6ea4;
+}
+
+.preset-btn.reset {
+  background-color: #95a5a6;
+}
+
+.preset-btn.reset:hover {
+  background-color: #7f8c8d;
+}

@@ -1,0 +1,41 @@
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.chart-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+}
+
+.chart-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.chart-content {
+  flex: 1;
+  padding: 0.5rem;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.chart-loading,
+.chart-error,
+.chart-no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+  font-size: 0.95rem;
+}
+
+.chart-error {
+  color: #e74c3c;
+}
