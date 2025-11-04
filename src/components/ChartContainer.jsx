@@ -64,20 +64,42 @@ function ChartContainer({ type, subType, title, department, dateRange }) {
 
       data.forEach(item => {
         const year = item.year;
-        const xValue = item.date || item.month;
-
-        if (!yearGroups[year]) {
-          yearGroups[year] = { x: [], y: [] };
+        const dateStr = item.date || item.month;
+        
+        // 日付から月/日を抽出
+        let xValue;
+        if (subType.includes('daily')) {
+          // 日毎の場合: MM-DD形式に変換
+          const date = new Date(dateStr);
+          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+          const day = date.getDate().toString().padStart(2, '0');
+          xValue = `${month}-${day}`;
+        } else {
+          // 月毎の場合: YYYY-MM から MM に変換
+          const parts = dateStr.split('-');
+          xValue = parts[1]; // 月のみ（01-12）
         }
 
-        yearGroups[year].x.push(xValue);
-        yearGroups[year].y.push(item.count);
+        if (!yearGroups[year]) {
+          yearGroups[year] = { values: {} };
+        }
+
+        // 同じ月/日のデータを集計（複数年度の場合）
+        if (!yearGroups[year].values[xValue]) {
+          yearGroups[year].values[xValue] = 0;
+        }
+        yearGroups[year].values[xValue] += item.count;
       });
 
-      Object.entries(yearGroups).forEach(([year, values]) => {
+      // データをソートして配列に変換
+      Object.entries(yearGroups).forEach(([year, group]) => {
+        const sortedKeys = Object.keys(group.values).sort();
+        const xValues = sortedKeys;
+        const yValues = sortedKeys.map(key => group.values[key]);
+
         plotData.push({
-          x: values.x,
-          y: values.y,
+          x: xValues,
+          y: yValues,
           type: 'scatter',
           mode: 'lines+markers',
           name: `${year}年`,
@@ -86,7 +108,10 @@ function ChartContainer({ type, subType, title, department, dateRange }) {
         });
       });
 
-      layout.xaxis = { title: subType.includes('daily') ? '日付' : '月' };
+      layout.xaxis = { 
+        title: subType.includes('daily') ? '月-日' : '月',
+        tickangle: -45
+      };
       layout.yaxis = { title: '患者数' };
     }
     // 科別の場合（積み上げ棒グラフ）
