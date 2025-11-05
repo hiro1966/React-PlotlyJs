@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar';
 import ChartGrid from './components/ChartGrid';
 import DateRangeSlider from './components/DateRangeSlider';
 import ContextMenu from './components/ContextMenu';
+import RightPanel from './components/RightPanel';
 import { API_BASE_URL } from './config';
 import './App.css';
 
@@ -183,11 +184,16 @@ function App() {
             onDateRangeChange={setDateRange}
           />
         </div>
-        <ChartGrid
-          charts={charts}
-          dateRange={dateRange}
-          onContextMenu={handleContextMenu}
-        />
+        <div className="content-wrapper">
+          <div className="charts-section">
+            <ChartGrid
+              charts={charts}
+              dateRange={dateRange}
+              onContextMenu={handleContextMenu}
+            />
+          </div>
+          <RightPanel dateRange={dateRange} />
+        </div>
       </main>
       {contextMenu.visible && (
         <ContextMenu
