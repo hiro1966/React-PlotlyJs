@@ -7,12 +7,42 @@ import { API_BASE_URL } from './config';
 import './App.css';
 
 function App() {
+  // 部署ごとのデフォルトビュー定義
+  const departmentViewConfigs = {
+    pharmacy: [
+      { id: 1, type: 'outpatients', subType: 'daily-by-year', title: '外来 - 日毎（年度比較）', department: null },
+      { id: 2, type: 'outpatients', subType: 'monthly-by-year', title: '外来 - 月毎（年度比較）', department: null },
+      { id: 3, type: 'inpatients', subType: 'daily-by-year', title: '入院 - 日毎（年度比較）', department: null },
+      { id: 4, type: 'inpatients', subType: 'monthly-by-year', title: '入院 - 月毎（年度比較）', department: null },
+    ],
+    consultation: [
+      { id: 1, type: 'outpatients', subType: 'daily-by-visit-type', title: '外来 - 日毎（初再）', department: null },
+      { id: 2, type: 'outpatients', subType: 'monthly-by-visit-type', title: '外来 - 月毎（初再）', department: null },
+      { id: 3, type: 'outpatients', subType: 'daily-by-dept', title: '外来 - 日毎（科別）', department: null },
+      { id: 4, type: 'outpatients', subType: 'monthly-by-dept', title: '外来 - 月別（科別）', department: null },
+    ],
+    reception: [
+      { id: 1, type: 'outpatients', subType: 'daily-by-year', title: '外来 - 日毎（年度比較）', department: null },
+      { id: 2, type: 'outpatients', subType: 'daily-by-visit-type', title: '外来 - 日毎（初再）', department: null },
+      { id: 3, type: 'outpatients', subType: 'monthly-by-year', title: '外来 - 月毎（年度比較）', department: null },
+      { id: 4, type: 'outpatients', subType: 'monthly-by-visit-type', title: '外来 - 月毎（初再）', department: null },
+    ],
+    management: [
+      { id: 1, type: 'outpatients', subType: 'monthly-by-year', title: '外来 - 月毎（年度比較）', department: null },
+      { id: 2, type: 'inpatients', subType: 'monthly-by-year', title: '入院 - 月毎（年度比較）', department: null },
+      { id: 3, type: 'outpatients', subType: 'monthly-by-dept', title: '外来 - 月別（科別）', department: null },
+      { id: 4, type: 'inpatients', subType: 'monthly-by-dept', title: '入院 - 月別（科別）', department: null },
+    ],
+  };
+
   const [charts, setCharts] = useState([
     { id: 1, type: 'outpatients', subType: 'daily-by-year', title: '外来 - 日毎（年度比較）', department: null },
     { id: 2, type: 'inpatients', subType: 'daily-by-year', title: '入院 - 日毎（年度比較）', department: null },
     { id: 3, type: null, subType: null, title: '', department: null },
     { id: 4, type: null, subType: null, title: '', department: null },
   ]);
+
+  const [currentView, setCurrentView] = useState('default');
 
   const [dateRange, setDateRange] = useState({
     start: '2023-01-01',
@@ -54,6 +84,17 @@ function App() {
       .catch(err => console.error('日付範囲取得エラー:', err));
   }, []);
 
+  // 部署ビュー切り替え
+  const handleDepartmentViewChange = (departmentId, label) => {
+    const viewConfig = departmentViewConfigs[departmentId];
+    if (viewConfig) {
+      setCharts(viewConfig);
+      setCurrentView(departmentId);
+      // 通知メッセージ（オプション）
+      console.log(`${label}のビューに切り替えました`);
+    }
+  };
+
   // メニューからグラフを選択した時の処理
   const handleMenuSelect = (type, subType, title) => {
     // どのエリアに表示するかを選択するダイアログを表示
@@ -68,6 +109,7 @@ function App() {
         department: null,
       };
       setCharts(newCharts);
+      setCurrentView('custom');
     }
   };
 
@@ -128,7 +170,10 @@ function App() {
 
   return (
     <div className="app" onClick={closeContextMenu}>
-      <Sidebar onMenuSelect={handleMenuSelect} />
+      <Sidebar 
+        onMenuSelect={handleMenuSelect}
+        onDepartmentViewChange={handleDepartmentViewChange}
+      />
       <main className="main-content">
         <div className="toolbar">
           <h1>病院ダッシュボード</h1>

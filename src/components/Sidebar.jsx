@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import './Sidebar.css';
 
-function Sidebar({ onMenuSelect }) {
+function Sidebar({ onMenuSelect, onDepartmentViewChange }) {
   const [expandedSections, setExpandedSections] = useState({
+    departments: false,
     inpatients: true,
     outpatients: true,
   });
@@ -13,6 +14,14 @@ function Sidebar({ onMenuSelect }) {
       [section]: !expandedSections[section],
     });
   };
+
+  // 部署ごとのビュー定義
+  const departmentViews = [
+    { id: 'pharmacy', label: '薬剤室' },
+    { id: 'consultation', label: '相談室' },
+    { id: 'reception', label: '受付' },
+    { id: 'management', label: '経営企画' },
+  ];
 
   const menuItems = {
     inpatients: {
@@ -42,12 +51,43 @@ function Sidebar({ onMenuSelect }) {
     onMenuSelect(type, subType, title);
   };
 
+  const handleDepartmentClick = (departmentId, label) => {
+    onDepartmentViewChange(departmentId, label);
+  };
+
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
         <h2>メニュー</h2>
       </div>
       <nav className="sidebar-nav">
+        {/* 部署ビュー選択 */}
+        <div className="menu-section department-views">
+          <div
+            className="section-header section-header-primary"
+            onClick={() => toggleSection('departments')}
+          >
+            <span className="section-title">🏥 部署ビュー</span>
+            <span className={`chevron ${expandedSections.departments ? 'expanded' : ''}`}>
+              ▼
+            </span>
+          </div>
+          {expandedSections.departments && (
+            <ul className="menu-items">
+              {departmentViews.map((dept) => (
+                <li
+                  key={dept.id}
+                  className="menu-item department-item"
+                  onClick={() => handleDepartmentClick(dept.id, dept.label)}
+                >
+                  {dept.label}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* 個別グラフ選択 */}
         {Object.entries(menuItems).map(([key, section]) => (
           <div key={key} className="menu-section">
             <div

@@ -92,3 +92,26 @@
 .sidebar-nav::-webkit-scrollbar-thumb:hover {
   background: rgba(255,255,255,0.3);
 }
+
+/* 部署ビューセクション */
+.department-views {
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+  margin-bottom: 1rem;
+}
+
+.section-header-primary {
+  background-color: rgba(52, 152, 219, 0.3);
+}
+
+.section-header-primary:hover {
+  background-color: rgba(52, 152, 219, 0.4);
+}
+
+.department-item {
+  font-weight: 500;
+  padding-left: 2rem;
+}
+
+.department-item:hover {
+  background-color: rgba(52, 152, 219, 0.2);
+}
